@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Colors List</h1>
+
+{% for color in colors %}
+  <div class="card">
+    <div class="card-content">
+      <span class="card-title">{{ color.name }}</span>
+      <p>Description: {{ color.description }}</p>
+      <p>Year: {{ color.year }}</p>
+    </div>
+  </div>
+{% endfor %}
+
+{% endblock %}
