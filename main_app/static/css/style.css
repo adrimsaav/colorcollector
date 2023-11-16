@@ -17,3 +17,10 @@ h1.home-header {
     text-align: center;
     padding: relative;
 }
+
+.left-brand-logo {
+    display: inline-block;
+    background-image: url("https://www.reviversoft.com/blog/wp-content/uploads/2013/08/Spinning-Beach-Ball1.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+}
