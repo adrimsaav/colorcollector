@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.views.generic.edit import CreateView
 from .models import Color
 
 # Create your views here.
@@ -30,3 +31,7 @@ def colors_detail(request, color_id):
   return render(request, 'colors/detail.html', {
     "color": color
     })  
+
+class ColorCreate(CreateView):
+  model = Color
+  fields = '__all__'
