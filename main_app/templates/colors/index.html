@@ -4,13 +4,14 @@
 <h1>Colors List</h1>
 
 {% for color in colors %}
+<a href="{% url 'detail' color.id %}">
   <div class="card">
     <div class="card-content">
       <span class="card-title">{{ color.name }}</span>
-      <p>Description: {{ color.description }}</p>
+      <p>Description: {{ color.description|linebreaks }}</p>
       <p>Year: {{ color.year }}</p>
     </div>
   </div>
+  </a>
 {% endfor %}
-
 {% endblock %}
