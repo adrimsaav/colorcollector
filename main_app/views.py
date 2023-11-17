@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Color
 
 # Create your views here.
@@ -35,3 +35,11 @@ def colors_detail(request, color_id):
 class ColorCreate(CreateView):
   model = Color
   fields = '__all__'
+
+class ColorUpdate(UpdateView):
+  model = Color
+  fields = ['description', 'year']
+
+class ColorDelete(DeleteView):
+  model = Color
+  success_url = "/colors"

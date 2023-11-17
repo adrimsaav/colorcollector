@@ -7,6 +7,10 @@
         <span class="card-title"> {{ color.name }} </span>
         <p>Description: {{ color.description|linebreaks }}</p>
         <p>Year: {{ color.year }}</p>
+        <div class="card-action">
+            <a href="{% url 'colors_update' color.id %}">Edit</a>
+            <a href="{% url 'colors_delete' color.id %}">Delete</a>
+        </div>
     </div>
 </div>
 
