@@ -14,6 +14,7 @@ from .models import Color
 #   {'name': 'Greenery', 'description': 'fresh and zesty yellow-green', 'year': 2017},
 # ]
 
+
 def home(request):
   return render(request, 'home.html')
 
