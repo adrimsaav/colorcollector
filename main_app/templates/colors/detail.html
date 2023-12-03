@@ -17,15 +17,26 @@
     </div>
      <!-- Mixing Colors, Part 4 -->
   <div class="col s6">
+    <form action="{% url 'add_mixing_color' color.id %}" method="POST">
+      {% csrf_token %}
+      {{ mixing_form.as_p }}
+      <input type="submit" class="btn" value="Add Mixing Color">
+    </form>
+    <form method="POST">
+      {% csrf_token %}
+      <!-- Render the inputs -->
+      {{ mixing_form.as_p }}
+      <input type="submit" class="btn" value="Add Mixing Color">
+    </form>
     <table class="striped">
       <thead>
         <tr><th>Date</th><th>Mixing Colors</th></tr>
       </thead>
       <tbody>
-        {% for mixing in color.mixing_set.all %}
+        {% for mixing in color.mix_set.all %}
           <tr>
             <td>{{mixing.date}}</td>
-            <td>{{mixing.get_color_display}}</td>
+            <td>{{mixing.get_mix_display}}</td>
           </tr>
         {% endfor %}
       </tbody>
@@ -33,4 +44,45 @@
   </div>
     <!-- Mixing Colors, Part 4 end -->
 </div>
+<hr>
+<!-- Part 5 below -->
+<div class="row">
+  <div class="col s6">
+    <h3>{{ color.name }}'s Votes</h3>
+    {% if color.votes.count %}
+      {% for vote in color.votes.all %}
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">
+              A <span style="color: {{ vote.choice }}">{{ vote.choice }}</span> {{ vote.name }}
+            </span>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <h5>No Votes Made</h5>
+    {% endif %}
+  </div>
+
+  <div class="col s6">
+    <h3>Vote if You Agree</h3>
+    {% if votes.count %}
+      {% for vote in votes.all %}
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">
+              {{ vote.choice }}</span> {{ vote.name }}
+            </span>
+          </div>
+          <div class="card-action">
+            <form action="" method="POST">
+              {% csrf_token %}
+              <button type="submit" class="btn">Vote</button>
+            </form>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <h5>{{ color.name }} Has Been Voted</h5>
+  {% endif %}
 {% endblock %}

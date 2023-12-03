@@ -8,10 +8,21 @@ MIXING_COLORS = (
 )
 
 # Create your models here.
+class Vote(models.Model):
+    name = models.CharField(max_length=3)
+    votes = models.CharField(max_length=3)
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('votes_detail', kwargs={'pk': self.id})
+
 class Color(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(max_length=250)
     year = models.IntegerField()
+    votes = models.ManyToManyField(Vote)
 
     def __str__(self):
         return f'{self.name} ({self.id})'
@@ -22,12 +33,16 @@ class Color(models.Model):
 
 class Mixing(models.Model):
     date = models.DateField('mixing date')
-    color = models.CharField(max_length=1,
-        choices = MIXING_COLORS,
-        default = MIXING_COLORS[0][0])
+    mix = models.CharField(
+        max_length=1,
+            choices = MIXING_COLORS,
+            default = MIXING_COLORS[0][0])
 
     # color_id FK
     color = models.ForeignKey(Color, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.get_color_display()} on {self.date}"
+        return f"{self.get_mix_display()} on {self.date}"
+
+    class Meta:
+        ordering = ['-date']

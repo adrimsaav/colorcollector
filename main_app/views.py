@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import Color
+from .models import Color, Vote
+from .forms import MixingForm
 
 # Create your views here.
 # colors = [
@@ -29,13 +30,16 @@ def colors_index(request):
 
 def colors_detail(request, color_id):
   color = Color.objects.get(id=color_id)
+  id_list = color.votes.all().values_list('id')
+  votes_color_doesnt_have = Vote.objects.exclude(id__in=id_list)
+  mixing_form = MixingForm()
   return render(request, 'colors/detail.html', {
-    "color": color
-    })  
+    'color': color, 'mixing_form': mixing_form
+  })
 
 class ColorCreate(CreateView):
   model = Color
-  fields = '__all__'
+  fields = ['name', 'description', 'year']
 
 class ColorUpdate(UpdateView):
   model = Color
@@ -44,3 +48,37 @@ class ColorUpdate(UpdateView):
 class ColorDelete(DeleteView):
   model = Color
   success_url = "/colors"
+
+
+def assoc_vote(request, color_id, vote_id):
+  Color.objects.get(id=color_id).votes.add(vote_id)
+  return redirect('detail', color_id=color_id)
+
+def unassoc_vote(request, color_id, vote_id):
+  Color.objects.get(id=color_id).votes.remove(vote_id)
+  return redirect('detail', color_id=color_id)
+
+def add_mixing_color(request, color_id):
+  form = MixingForm(request.POST)
+  # validate the form
+  if form.is_valid():
+    # don't save the form to the db until it
+    # has the cat_id assigned
+    new_mixing_color = form.save(commit=False)
+    new_mixing.color_id = color_id
+    new_mixing_color.save()
+  return redirect('detail', color_id=color_id)
+
+
+class VoteCreate(CreateView):
+  model = Vote
+  fields = '__all__'
+
+class VoteUpdate(UpdateView):
+  model = Vote
+  fields = ['name', 'votes']
+
+class VoteDelete(DeleteView):
+  model = Vote
+  success_url = '/votes'
+
