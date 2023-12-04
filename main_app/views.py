@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import Color, Vote
+from django.views.generic import ListView, DetailView
+from .models import Color, Star
 from .forms import MixingForm
 
 # Create your views here.
@@ -30,11 +31,13 @@ def colors_index(request):
 
 def colors_detail(request, color_id):
   color = Color.objects.get(id=color_id)
-  id_list = color.votes.all().values_list('id')
-  votes_color_doesnt_have = Vote.objects.exclude(id__in=id_list)
+  id_list = color.stars.all().values_list('id')
+  stars_color_doesnt_have = Star.objects.exclude(id__in=id_list)
   mixing_form = MixingForm()
   return render(request, 'colors/detail.html', {
-    'color': color, 'mixing_form': mixing_form
+    'color': color, 'mixing_form': mixing_form,
+    'star': stars_color_doesnt_have
+
   })
 
 class ColorCreate(CreateView):
@@ -50,12 +53,30 @@ class ColorDelete(DeleteView):
   success_url = "/colors"
 
 
-def assoc_vote(request, color_id, vote_id):
-  Color.objects.get(id=color_id).votes.add(vote_id)
+class StarList(ListView):
+  model = Star
+
+class StarDetail(DetailView):
+  model = Star
+
+class StarCreate(CreateView):
+  model = Star
+  fields = '__all__'
+
+class StarUpdate(UpdateView):
+  model = Star
+  fields = ['review', 'stars']
+
+class StarDelete(DeleteView):
+  model = Star
+  success_url = '/stars'
+
+def assoc_star(request, color_id, star_id):
+  Color.objects.get(id=color_id).stars.add(star_id)
   return redirect('detail', color_id=color_id)
 
-def unassoc_vote(request, color_id, vote_id):
-  Color.objects.get(id=color_id).votes.remove(vote_id)
+def unassoc_star(request, color_id, star_id):
+  Color.objects.get(id=color_id).stars.remove(star_id)
   return redirect('detail', color_id=color_id)
 
 def add_mixing_color(request, color_id):
@@ -69,16 +90,4 @@ def add_mixing_color(request, color_id):
     new_mixing_color.save()
   return redirect('detail', color_id=color_id)
 
-
-class VoteCreate(CreateView):
-  model = Vote
-  fields = '__all__'
-
-class VoteUpdate(UpdateView):
-  model = Vote
-  fields = ['name', 'votes']
-
-class VoteDelete(DeleteView):
-  model = Vote
-  success_url = '/votes'
 

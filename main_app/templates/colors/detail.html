@@ -48,14 +48,19 @@
 <!-- Part 5 below -->
 <div class="row">
   <div class="col s6">
-    <h3>{{ color.name }}'s Votes</h3>
-    {% if color.votes.count %}
-      {% for vote in color.votes.all %}
+    <h3>{{ color.name }}'s Star Ratings</h3>
+    {% if color.stars.count %}
+      {% for star in color.stars.all %}
         <div class="card">
           <div class="card-content">
             <span class="card-title">
-              A <span style="color: {{ vote.choice }}">{{ vote.choice }}</span> {{ vote.name }}
-            </span>
+              {{ star.number }} </span> {{ color.name }}
+          </div>
+          <div class="card-action">
+            <form action="{% url 'unassoc_star' color.id star.id %}" method="POST">
+              {% csrf_token %}
+              <button type="submit" class="btn">Remove Rating</button>
+            </form>
           </div>
         </div>
       {% endfor %}
@@ -65,19 +70,18 @@
   </div>
 
   <div class="col s6">
-    <h3>Vote if You Agree</h3>
-    {% if votes.count %}
-      {% for vote in votes.all %}
+    <h3>Ratings</h3>
+    {% if stars.count %}
+      {% for star in stars.all %}
         <div class="card">
           <div class="card-content">
             <span class="card-title">
-              {{ vote.choice }}</span> {{ vote.name }}
-            </span>
+              {{ star.number }}</span> {{ color.name }}
           </div>
           <div class="card-action">
-            <form action="" method="POST">
+            <form action="{% url 'assoc_star' color.id star.id %}" method="POST">
               {% csrf_token %}
-              <button type="submit" class="btn">Vote</button>
+              <button type="submit" class="btn">Give Rating</button>
             </form>
           </div>
         </div>

@@ -8,21 +8,21 @@ MIXING_COLORS = (
 )
 
 # Create your models here.
-class Vote(models.Model):
-    name = models.CharField(max_length=3)
-    votes = models.CharField(max_length=3)
+class Star(models.Model):
+    review = models.CharField(max_length=20)
+    stars = models.CharField(max_length=1)
 
     def __str__(self):
-        return self.name
+        return self.review
 
     def get_absolute_url(self):
-        return reverse('votes_detail', kwargs={'pk': self.id})
+        return reverse('star_detail', kwargs={'pk': self.id})
 
 class Color(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(max_length=250)
     year = models.IntegerField()
-    votes = models.ManyToManyField(Vote)
+    stars = models.ManyToManyField(Star)
 
     def __str__(self):
         return f'{self.name} ({self.id})'

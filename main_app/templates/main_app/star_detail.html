@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Voting Details</h1>
+<h1>Star Rating Details</h1>
 
 <div class="row">
   <div class="col s6 col-offset-3">
     <div class="card">
       <div class="card-content">
-        <span class="card-title">{{ vote.name }}</span>
-        <p>Vote: {{ vote.name }}</p>
+        <span class="card-title">{{ star.name }}</span>
+        <p>Rating: {{ star.name }}</p>
       </div>
       <div class="card-action">
-        <a href="{% url 'votes_update' vote.id %}">Edit</a>
-        <a href="{% url 'votes_delete' vote.id %}">Delete</a>
+        <a href="{% url 'stars_update' star.id %}">Edit</a>
+        <a href="{% url 'stars_delete' star.id %}">Delete</a>
       </div>
     </div>
   </div>
