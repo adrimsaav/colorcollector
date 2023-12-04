@@ -4,4 +4,4 @@ from .models import Mixing
 class MixingForm(ModelForm):
     class Meta:
         model = Mixing
-        fields = ['date', 'color']
+        fields = ['mix']

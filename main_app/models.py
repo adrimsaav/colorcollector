@@ -9,14 +9,14 @@ MIXING_COLORS = (
 
 # Create your models here.
 class Star(models.Model):
-    review = models.CharField(max_length=20)
+    review = models.TextField(default='No review yet')
     stars = models.CharField(max_length=1)
 
     def __str__(self):
-        return self.review
+        return self.stars
 
     def get_absolute_url(self):
-        return reverse('star_detail', kwargs={'pk': self.id})
+        return reverse('stars_detail', kwargs={'pk': self.id})
 
 class Color(models.Model):
     name = models.CharField(max_length=100)
@@ -32,7 +32,6 @@ class Color(models.Model):
 
 
 class Mixing(models.Model):
-    date = models.DateField('mixing date')
     mix = models.CharField(
         max_length=1,
             choices = MIXING_COLORS,
@@ -42,7 +41,4 @@ class Mixing(models.Model):
     color = models.ForeignKey(Color, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.get_mix_display()} on {self.date}"
-
-    class Meta:
-        ordering = ['-date']
+        return f"{self.get_mix_display()}"

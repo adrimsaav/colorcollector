@@ -4,7 +4,6 @@ from django.views.generic import ListView, DetailView
 from .models import Color, Star
 from .forms import MixingForm
 
-# Create your views here.
 # colors = [
 #   {'name': 'Viva Magenta', 'description': 'bright, vivid shade of purplish-red', 'year': 2023},
 #   {'name': 'Very Peri', 'description': 'warm periwinkle, a bold lavender', 'year': 2022},
@@ -31,12 +30,13 @@ def colors_index(request):
 
 def colors_detail(request, color_id):
   color = Color.objects.get(id=color_id)
+  stars = Star.objects.all()
   id_list = color.stars.all().values_list('id')
   stars_color_doesnt_have = Star.objects.exclude(id__in=id_list)
   mixing_form = MixingForm()
   return render(request, 'colors/detail.html', {
     'color': color, 'mixing_form': mixing_form,
-    'star': stars_color_doesnt_have
+    'stars': stars_color_doesnt_have
 
   })
 
@@ -52,6 +52,14 @@ class ColorDelete(DeleteView):
   model = Color
   success_url = "/colors"
 
+def add_mixing_color(request, color_id):
+  form = MixingForm(request.POST)
+  if form.is_valid():
+    new_mixing = form.save(commit=False)
+    new_mixing.color_id = color_id
+    new_mixing.save()
+    
+  return redirect('detail', color_id=color_id)
 
 class StarList(ListView):
   model = Star
@@ -76,18 +84,7 @@ def assoc_star(request, color_id, star_id):
   return redirect('detail', color_id=color_id)
 
 def unassoc_star(request, color_id, star_id):
-  Color.objects.get(id=color_id).stars.remove(star_id)
-  return redirect('detail', color_id=color_id)
-
-def add_mixing_color(request, color_id):
-  form = MixingForm(request.POST)
-  # validate the form
-  if form.is_valid():
-    # don't save the form to the db until it
-    # has the cat_id assigned
-    new_mixing_color = form.save(commit=False)
-    new_mixing.color_id = color_id
-    new_mixing_color.save()
+  Color.objects.get(id=cat_id).stars.remove(star_id)
   return redirect('detail', color_id=color_id)
 
 
